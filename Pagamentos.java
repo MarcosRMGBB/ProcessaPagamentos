@@ -18,6 +18,26 @@ public class Pagamentos {
         this.dataVencimento = LocalDate.parse(dataVencimento, format);
     }
 
+    public LocalDate getDataVencimento() {
+        return this.dataVencimento;
+    }
+
+    public void setValor(double novoValor) {
+        this.valor = novoValor;
+    }
+
+    public void setClassificacao(int novaClassificacao) {
+        this.classificacao = novaClassificacao;
+    }
+
+    public int getClassificacao() {
+        return this.classificacao;
+    }
+
+    public double getValor() {
+        return this.valor;
+    }
+
     @Override
     public String toString() {
         return "Cliente: " + this.clientNome + "\n" +

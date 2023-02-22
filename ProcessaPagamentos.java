@@ -33,6 +33,19 @@ public class ProcessaPagamentos {
                                                                           Double.parseDouble(payInfo[2]), 
                                                                           Integer.parseInt(payInfo[3]));
                                     pagamento.setDatavencimento(payInfo[1]);
+
+                                    // Atualiza valores
+                                    UpdatePagamentos update = new UpdatePagamentos(pagamento);
+                                    update.periodoCalculado();
+                                    int dias = update.getPeriodoCalculado();
+
+                                    if (dias > 0) {
+                                        update.atualizaValor();
+                                        update.atualizaPontos();
+                                    } else if (dias <= 0) {
+                                        update.aplicaDesconto();
+                                    }
+                                    System.out.println("Dias: " + dias);
                                     System.out.println(pagamento);
                                 }
                                 // Ler a próxima linha
