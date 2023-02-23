@@ -40,9 +40,7 @@ public class Pagamentos {
 
     @Override
     public String toString() {
-        return "Cliente: " + this.clientNome + "\n" +
-               "Vencimento: " + this.dataVencimento + "\n" +
-               "Valor: " + this.valor + "\n" +
-               "Classificacao: " + this.classificacao;
+        return this.clientNome + "," + this.dataVencimento + "," + this.valor + "," +
+               this.classificacao;
     }
 }

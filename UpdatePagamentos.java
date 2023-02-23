@@ -5,6 +5,7 @@ public class UpdatePagamentos {
     public static final double MULTA = 50.0;
     public static final double JUROS = 0.01;
     public static final int PONTOS_ATRASO = 1;
+    public static final double CONVERSOR_PORCENTAGEM = 100.0;
     LocalDate hoje = LocalDate.now();
     int diasCalculados;
     int mesesCalculados;
@@ -37,15 +38,15 @@ public class UpdatePagamentos {
     }
 
     public void atualizaPontos() {
-        int classificacaoAtual = this.pagamento.getClassificacao();
+        int classificacaoAtual = pagamento.getClassificacao();
         int pontosPerdidos = mesesCalculados * PONTOS_ATRASO;
         int novaClassificacao = classificacaoAtual - pontosPerdidos;
         this.pagamento.setClassificacao(novaClassificacao);
     }
 
     public void aplicaDesconto() {
-        double desconto = pagamento.getClassificacao() / 100;
-        double valorDesconto = pagamento.getValor() * desconto;
+        double desconto = (double) this.pagamento.getClassificacao() / CONVERSOR_PORCENTAGEM;
+        double valorDesconto = this.pagamento.getValor() * desconto;
         if (valorDesconto > 500) {
             valorDesconto = 500;
         }
