@@ -21,8 +21,20 @@ public class Main {
             // Verifica se existe arquivos
             if (path.toFile().listFiles().length != 0) {
                 System.out.println("Há arquivos para processamento!"); 
+                try {
+                    // Leitura
                 BufferedReader reader = lerArquivos(PATH_LEITURA);
-                atualizaRegistros(reader);
+                // Escrita
+                FileWriter output = new FileWriter(PATH_ESCRITA + FILE_ATUALIZADOS);
+                //BufferedWriter output = new BufferedWriter(arquivo);
+                atualizaRegistros(reader, output);
+                // Fecha conexão
+                reader.close();
+                output.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
             } else {
                 System.out.println("Não há arquivos para processamento!");
             } 
@@ -49,40 +61,6 @@ public class Main {
         return reader;
     }
 
-    public static void atualizaRegistros(BufferedReader reader) {  
-        try {
-            String line = reader.readLine();
-            int lineCount = 0;
-            // Faz a leitura das linhas não fazias
-            while (line != null) {                               
-                if (lineCount >= 1 & line != null) {
-                // Transforma a leitura em uma lista para criar o objeto java
-                String[] payInfo = line.split(",");
-                Pagamentos pagamento = new Pagamentos(payInfo[0], Double.parseDouble(payInfo[2]), 
-                                                    Integer.parseInt(payInfo[3]));
-                pagamento.setDatavencimento(payInfo[1]);
-
-                Pagamentos pagamentoAtualizado = atualizaDados(pagamento);
-                try {
-                    // Creates a FileWriter
-                    FileWriter arquivo = new FileWriter(PATH_ESCRITA + FILE_ATUALIZADOS);
-                    // Creates a BufferedWriter
-                    BufferedWriter output = new BufferedWriter(arquivo);
-                    escreveArquivo(pagamentoAtualizado, output);
-                    output.newLine();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            // Ler a próxima linha
-            line = reader.readLine();
-            lineCount++;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static Pagamentos atualizaDados(Pagamentos pagamento) {
         UpdatePagamentos update = new UpdatePagamentos(pagamento);
         update.periodoCalculado();
@@ -99,11 +77,37 @@ public class Main {
         return pagamento;
     }
 
+    public static void atualizaRegistros(BufferedReader reader, FileWriter output) {  
+        try {
+            String line = reader.readLine();
+            int lineCount = 0;
+            // Faz a leitura das linhas não fazias
+            while (line != null) {                               
+                if (lineCount >= 1 & line != null) {
+                // Transforma a leitura em uma lista para criar o objeto java
+                String[] payInfo = line.split(",");
+                Pagamentos pagamento = new Pagamentos(payInfo[0], Double.parseDouble(payInfo[2]), 
+                                                    Integer.parseInt(payInfo[3]));
+                pagamento.setDatavencimento(payInfo[1]);
+
+                Pagamentos pagamentoAtualizado = atualizaDados(pagamento);
+                    escreveArquivo(pagamentoAtualizado, output);
+                }
+            // Ler a próxima linha
+            line = reader.readLine();
+            lineCount++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void escreveArquivo(Pagamentos pagamento, FileWriter output) {
         try {
             String texto = pagamento.toString();
             System.out.println("Escrevendo registro: " + texto);
             output.write(texto);
+            output.write(System.lineSeparator());
         } catch (Exception e) {
             e.printStackTrace();
         }
