@@ -27,18 +27,45 @@ public class Main {
                     ArrayList<BufferedReader> readerList = readerFilesName.getReader();
                     String[] filesNameList = readerFilesName.getFiles();
                     // Escrita
-                    for (int i = 0; i < filesNameList.length; i++) {
-                        String fileName = FILE_ATUALIZADOS + filesNameList[i]; 
-                        FileWriter output = new FileWriter(PATH_ESCRITA + fileName);
-                        Runnable processaArquivo = new ProcessaArquivo(readerList.get(i), output);
-                        Thread thread = new Thread(processaArquivo);
-                        thread.start();
-                        //atualizaRegistros(readerList.get(i), output);
+
+                    String fileName1 = FILE_ATUALIZADOS + filesNameList[0]; 
+                    String fileName2 = FILE_ATUALIZADOS + filesNameList[1]; 
+
+                    FileWriter output1 = new FileWriter(PATH_ESCRITA + fileName1);
+                    FileWriter output2 = new FileWriter(PATH_ESCRITA + fileName2);
+
+                    Runnable processaArquivo1 = new ProcessaArquivo(readerList.get(0), output1);
+                    Runnable processaArquivo2 = new ProcessaArquivo(readerList.get(1), output2);
+
+                    Thread thread1 = new Thread(processaArquivo1);
+                    Thread thread2 = new Thread(processaArquivo2);
+
+                    thread1.start();
+                    thread2.start();
+
+                    try {
+                        thread1.join();
+                        thread2.join();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    output1.close();
+                    output2.close();
+                    readerList.get(0).close();
+                    readerList.get(1).close();
+                    
+                    // for (int i = 0; i < filesNameList.length; i++) {
+                    //     String fileName = FILE_ATUALIZADOS + filesNameList[i]; 
+                    //     FileWriter output = new FileWriter(PATH_ESCRITA + fileName);
+                    //     Runnable processaArquivo = new ProcessaArquivo(readerList.get(i), output);
+                    //     Thread thread = new Thread(processaArquivo);
+                    //     thread.start();
                         // Fecha conexão
                         // readerList.get(0).close();
                         // readerList.get(1).close();
                         // output.close();
-                    }
+                    // }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
