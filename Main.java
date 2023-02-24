@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 
@@ -22,16 +23,18 @@ public class Main {
                 System.out.println("Há arquivos para processamento!"); 
                 try {
                     // Leitura
-                ReaderFilesName readerFilesName = lerArquivos(PATH_LEITURA);
-                BufferedReader reader = readerFilesName.getReader();
-                String fileName = FILE_ATUALIZADOS + readerFilesName.getFiles()[0];
-                // Escrita
-                FileWriter output = new FileWriter(PATH_ESCRITA + fileName );
-                //BufferedWriter output = new BufferedWriter(arquivo);
-                atualizaRegistros(reader, output);
-                // Fecha conexão
-                reader.close();
-                output.close();
+                    ReaderFilesName readerFilesName = lerArquivos(PATH_LEITURA);
+                    ArrayList<BufferedReader> readerList = readerFilesName.getReader();
+                    String[] filesNameList = readerFilesName.getFiles();
+                    // Escrita
+                    for (int i = 0; i < filesNameList.length; i++) {
+                        String fileName = FILE_ATUALIZADOS + filesNameList[i]; 
+                        FileWriter output = new FileWriter(PATH_ESCRITA + fileName);
+                        atualizaRegistros(readerList.get(i), output);
+                        // Fecha conexão
+                        readerList.get(i).close();
+                        output.close();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -47,19 +50,18 @@ public class Main {
     public static ReaderFilesName lerArquivos(String path) {
         File directory = new File(path);
         String[] contents = directory.list();
-        if (contents.length <= 1) {
-            Path pathFile = Path.of(path, contents[0]); 
+        ArrayList<BufferedReader> readersList = new ArrayList<>();
+        for (int i = 0; i < contents.length; i++) {
+            Path pathFile = Path.of(path, contents[i]); 
             try{
                 BufferedReader reader = Files.newBufferedReader(pathFile);
-                ReaderFilesName readerFilesName = new ReaderFilesName(reader, contents);
-                return readerFilesName;
+                readersList.add(reader);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("Implementar multiplos arquivos!");
         }
-        return null;
+        ReaderFilesName readerFilesName = new ReaderFilesName(readersList, contents);
+        return readerFilesName;
     }
 
     public static Pagamentos atualizaDados(Pagamentos pagamento) {

@@ -1,15 +1,16 @@
 import java.io.BufferedReader;
+import java.util.ArrayList;
 
 public class ReaderFilesName {
-    BufferedReader reader;
+    ArrayList<BufferedReader> reader;
     String[] files;
 
-    public ReaderFilesName(BufferedReader reader, String[] files) {
+    public ReaderFilesName(ArrayList<BufferedReader> reader, String[] files) {
         this.reader = reader;
         this.files = files;
     }
 
-    public BufferedReader getReader() {
+    public ArrayList<BufferedReader> getReader() {
         return this.reader;
     }
 
