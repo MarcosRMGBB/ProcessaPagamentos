@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 
 public class Main {
     public static final String PATH_LEITURA = "db/processamento/";
     public static final String PATH_ESCRITA = "db/processado/";
-    public static final String FILE_ATUALIZADOS = "pagamentosAtualizados_DATA.csv";
+    public static final String FILE_ATUALIZADOS = "pagamentosAtualizados_";
 
     public static void main(String[] args) {
         Path path = Path.of(PATH_LEITURA);
@@ -23,9 +22,11 @@ public class Main {
                 System.out.println("Há arquivos para processamento!"); 
                 try {
                     // Leitura
-                BufferedReader reader = lerArquivos(PATH_LEITURA);
+                ReaderFilesName readerFilesName = lerArquivos(PATH_LEITURA);
+                BufferedReader reader = readerFilesName.getReader();
+                String fileName = FILE_ATUALIZADOS + readerFilesName.getFiles()[0];
                 // Escrita
-                FileWriter output = new FileWriter(PATH_ESCRITA + FILE_ATUALIZADOS);
+                FileWriter output = new FileWriter(PATH_ESCRITA + fileName );
                 //BufferedWriter output = new BufferedWriter(arquivo);
                 atualizaRegistros(reader, output);
                 // Fecha conexão
@@ -43,22 +44,22 @@ public class Main {
         }
     }
 
-    public static BufferedReader lerArquivos(String path) {
-        BufferedReader reader = null;
+    public static ReaderFilesName lerArquivos(String path) {
         File directory = new File(path);
         String[] contents = directory.list();
         if (contents.length <= 1) {
             Path pathFile = Path.of(path, contents[0]); 
             try{
-                reader = Files.newBufferedReader(pathFile);
-                return reader;
+                BufferedReader reader = Files.newBufferedReader(pathFile);
+                ReaderFilesName readerFilesName = new ReaderFilesName(reader, contents);
+                return readerFilesName;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println("Implementar multiplos arquivos!");
-        }   
-        return reader;
+        }
+        return null;
     }
 
     public static Pagamentos atualizaDados(Pagamentos pagamento) {

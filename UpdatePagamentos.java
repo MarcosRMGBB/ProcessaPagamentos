@@ -41,6 +41,9 @@ public class UpdatePagamentos {
         int classificacaoAtual = pagamento.getClassificacao();
         int pontosPerdidos = mesesCalculados * PONTOS_ATRASO;
         int novaClassificacao = classificacaoAtual - pontosPerdidos;
+        if (novaClassificacao < 0) {
+            novaClassificacao = 0;
+        }
         this.pagamento.setClassificacao(novaClassificacao);
     }
 
