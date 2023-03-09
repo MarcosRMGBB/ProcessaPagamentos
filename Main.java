@@ -16,6 +16,7 @@ public class Main {
     public static void main(String[] args) {
         Path path = Path.of(PATH_LEITURA);
 
+        System.out.println("************INÍCIO DO PROCESSAMENTO************");
         if (Files.exists(path)) {
             System.out.println("A pasta existe!");
             // Verifica se existe arquivos
@@ -54,6 +55,8 @@ public class Main {
                     output2.close();
                     readerList.get(0).close();
                     readerList.get(1).close();
+
+                    System.out.println("************FIM DO PROCESSAMENTO************");
                     
                     // for (int i = 0; i < filesNameList.length; i++) {
                     //     String fileName = FILE_ATUALIZADOS + filesNameList[i]; 
